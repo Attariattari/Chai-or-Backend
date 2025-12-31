@@ -17,5 +17,8 @@ app.use(
 app.get("/", (req, res) => {
   res.send("Welcome to the Chai-or Backend!");
 });
+// Other route imports and middleware would go here
+import userRoutes from "./routes/user.routes.js";
+app.use("/api/v1/users", userRoutes);
 
 export default app;
