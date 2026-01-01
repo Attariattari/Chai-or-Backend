@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -7,17 +8,22 @@ cloudinary.config({
 });
 
 const uploadToCloudinary = async (localFilePath) => {
+  if (!localFilePath) return null;
+
   try {
-    if (!localFilePath) return null;
     const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auto",
+      folder: "avatars",
+      resource_type: "image",
     });
-    // file has been uploaded, remove it from local uploads folder
-    console.log("File uploaded to Cloudinary:", response.secure_url);
+
+    fs.unlinkSync(localFilePath);
     return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath); // delete the local file in case of error
-    return null;
+    console.error("Cloudinary error:", error.message);
+    if (fs.existsSync(localFilePath)) fs.unlinkSync(localFilePath);
+    throw error; // 👈 silently fail mat karo
   }
 };
+
+
 export { uploadToCloudinary };
