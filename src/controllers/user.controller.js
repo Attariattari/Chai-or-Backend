@@ -164,7 +164,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken;
 
-  if (incomingRefreshToken) {
+  if (!incomingRefreshToken) {
     throw new ApiError("unauthorized request", 401);
   }
 
@@ -174,7 +174,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET
     );
 
-    const user = await User.findById(decodedToken.userId);
+    const user = await User.findById(decodedToken._id);
+
     if (!user) {
       throw new ApiError("Invalid refresh token", 401);
     }
