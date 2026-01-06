@@ -14,9 +14,9 @@ const storage = multer.diskStorage({
 export const upload = multer({
   storage,
   fileFilter(req, file, cb) {
-    if (!file.mimetype.startsWith("image/")) {
-      cb(new Error("Only images allowed"), false);
-    }
+    // if (!file.mimetype.startsWith("image/")) {
+    //   cb(new Error("Only images allowed"), false);
+    // }
     cb(null, true);
   },
 });
